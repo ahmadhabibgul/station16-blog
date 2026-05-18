@@ -1,0 +1,1310 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading… — Station 16</title>
+
+    <!-- Shared design system -->
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      /* ============================================================
+       POST.HTML — Article Reader Styles
+       All shared styles live in style.css
+    ============================================================ */
+
+      /* ── READING PROGRESS BAR ─────────────────────────────────── */
+      #readProgress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 3px;
+        background: var(--orange);
+        z-index: var(--z-prog);
+        pointer-events: none;
+        will-change: width;
+        transition: width 0.07s linear;
+      }
+
+      /* ── META BAR (back link + breadcrumb) ────────────────────── */
+      .meta-bar {
+        border-bottom: 1px solid var(--rule);
+        background: var(--white);
+      }
+
+      .meta-bar-inner {
+        display: flex;
+        align-items: center;
+        height: 46px;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-family: var(--font-sans);
+        font-size: 11.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.9px;
+        color: var(--muted);
+        flex-shrink: 0;
+        white-space: nowrap;
+        transition: color var(--fast);
+      }
+      .back-link:hover {
+        color: var(--orange);
+      }
+      .back-link svg {
+        flex-shrink: 0;
+        transition: transform var(--fast);
+      }
+      .back-link:hover svg {
+        transform: translateX(-3px);
+      }
+
+      .meta-pipe {
+        width: 1px;
+        height: 16px;
+        background: var(--rule);
+        margin: 0 16px;
+        flex-shrink: 0;
+      }
+
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-family: var(--font-sans);
+        font-size: 12px;
+        color: var(--faint);
+        min-width: 0;
+        overflow: hidden;
+      }
+      .breadcrumb a:hover {
+        color: var(--orange);
+      }
+      .bc-sep {
+        color: var(--rule);
+        font-size: 16px;
+        line-height: 1;
+      }
+      .bc-cat {
+        font-weight: 700;
+        color: var(--orange);
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.8px;
+        white-space: nowrap;
+      }
+
+      /* ── ARTICLE HEADER ───────────────────────────────────────── */
+      .article-page {
+        padding-bottom: 80px;
+        min-height: 75vh;
+      }
+
+      .art-header {
+        max-width: var(--article);
+        margin-inline: auto;
+        padding: 48px 22px 34px;
+      }
+
+      .art-cat-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-sans);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2.2px;
+        color: var(--orange);
+        margin-bottom: 20px;
+        transition: opacity var(--fast);
+      }
+      .art-cat-link:hover {
+        opacity: 0.72;
+      }
+
+      .cat-dash {
+        display: inline-block;
+        width: 28px;
+        height: 2.5px;
+        background: currentColor;
+        flex-shrink: 0;
+        border-radius: 1px;
+      }
+
+      .art-hl {
+        font-family: var(--font-display);
+        font-size: 46px;
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.13;
+        letter-spacing: -0.7px;
+        margin-bottom: 22px;
+      }
+
+      .art-deck {
+        font-family: var(--font-sans);
+        font-size: 19px;
+        font-weight: 400;
+        line-height: 1.64;
+        color: var(--muted);
+        font-style: italic;
+        padding-left: 18px;
+        border-left: 3px solid var(--rule);
+        margin-bottom: 26px;
+      }
+
+      .art-byline {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 14px 0;
+        border-top: 1px solid var(--rule);
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .by-author {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--ink);
+      }
+      .by-dot {
+        display: inline-block;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--faint);
+        margin: 0 10px;
+        flex-shrink: 0;
+      }
+      .by-date {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--muted);
+      }
+      .by-read-time {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--faint);
+      }
+
+      /* ── HERO IMAGE ───────────────────────────────────────────── */
+      .art-hero-outer {
+        max-width: var(--content);
+        margin-inline: auto;
+        padding-inline: 22px;
+      }
+
+      .art-hero-img {
+        width: 100%;
+        overflow: hidden;
+        background: var(--surface);
+        line-height: 0;
+      }
+      .art-hero-img img {
+        width: 100%;
+        max-height: 560px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .art-hero-caption {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        padding-top: 9px;
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--faint);
+        font-style: italic;
+        line-height: 1.5;
+      }
+      .cap-bullet {
+        width: 6px;
+        height: 6px;
+        background: var(--orange);
+        flex-shrink: 0;
+        margin-top: 4px;
+      }
+
+      /* ── ARTICLE BODY LAYOUT (body + sidebar) ─────────────────── */
+      .art-wrap {
+        display: grid;
+        grid-template-columns: 1fr 268px;
+        gap: 0 64px;
+        max-width: var(--content);
+        margin-inline: auto;
+        padding-inline: 22px;
+        align-items: start;
+      }
+
+      /* ── BODY TEXT ────────────────────────────────────────────── */
+      .art-body {
+        padding-top: 38px;
+        max-width: var(--reading);
+      }
+
+      .art-body p {
+        font-family: var(--font-serif);
+        font-size: 19px;
+        line-height: 1.84;
+        color: var(--body);
+        margin-bottom: 28px;
+      }
+
+      /* Drop cap — applied via JS to the first <p> */
+      .art-body p.p-lead::first-letter {
+        font-family: var(--font-display);
+        font-size: 82px;
+        font-weight: 800;
+        float: left;
+        line-height: 0.76;
+        margin: 6px 10px -6px 0;
+        color: var(--ink);
+      }
+
+      .art-body h2 {
+        font-family: var(--font-display);
+        font-size: 27px;
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.25;
+        margin: 48px 0 18px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .art-body h3 {
+        font-family: var(--font-sans);
+        font-size: 10.5px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2.2px;
+        color: var(--muted);
+        margin: 40px 0 14px;
+      }
+
+      /* Pull quote */
+      .art-body blockquote {
+        margin: 48px 0;
+        padding: 22px 0 22px 28px;
+        border-left: 4px solid var(--orange);
+      }
+      .art-body blockquote p {
+        font-family: var(--font-display);
+        font-size: 24px;
+        font-style: italic;
+        color: var(--ink);
+        line-height: 1.5;
+        margin-bottom: 0;
+      }
+      .art-body blockquote cite {
+        display: block;
+        margin-top: 12px;
+        font-family: var(--font-sans);
+        font-size: 11.5px;
+        font-weight: 700;
+        font-style: normal;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.9px;
+      }
+
+      .art-body hr {
+        border: none;
+        border-top: 1px solid var(--rule);
+        margin: 48px 0;
+      }
+
+      /* Inline links within body */
+      .art-body a {
+        color: var(--ink);
+        border-bottom: 1px solid var(--hairline);
+        transition:
+          color var(--fast),
+          border-color var(--fast);
+      }
+      .art-body a:hover {
+        color: var(--orange);
+        border-bottom-color: var(--orange);
+      }
+
+      /* Lists from markdown */
+      .art-body ul,
+      .art-body ol {
+        padding-left: 24px;
+        margin-bottom: 28px;
+      }
+      .art-body ul {
+        list-style: disc;
+      }
+      .art-body ol {
+        list-style: decimal;
+      }
+      .art-body li {
+        font-family: var(--font-serif);
+        font-size: 19px;
+        line-height: 1.84;
+        color: var(--body);
+        margin-bottom: 8px;
+      }
+
+      /* ── END-OF-ARTICLE ELEMENTS ──────────────────────────────── */
+      .art-footer {
+        max-width: var(--reading);
+        margin-top: 14px;
+        padding-top: 28px;
+        border-top: 1px solid var(--rule);
+      }
+
+      .art-tags {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 22px;
+      }
+      .tags-label {
+        font-family: var(--font-sans);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--muted);
+        margin-right: 4px;
+      }
+      .tag-pill {
+        display: inline-block;
+        padding: 5px 13px;
+        background: var(--surface);
+        border: 1px solid var(--rule);
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        transition:
+          background var(--fast),
+          border-color var(--fast),
+          color var(--fast);
+      }
+      .tag-pill:hover {
+        background: var(--orange);
+        border-color: var(--orange);
+        color: var(--white);
+      }
+
+      .share-bar {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .share-label {
+        font-family: var(--font-sans);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--muted);
+        margin-right: 2px;
+      }
+      .share-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 16px;
+        border: 1.5px solid var(--rule);
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        letter-spacing: 0.2px;
+        background: none;
+        cursor: pointer;
+        transition:
+          border-color var(--fast),
+          color var(--fast);
+      }
+      .share-btn:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+      .share-btn.btn--copied {
+        border-color: #22c55e;
+        color: #22c55e;
+      }
+
+      /* ── STICKY SIDEBAR ───────────────────────────────────────── */
+      .art-sidebar {
+        position: sticky;
+        top: 74px;
+        padding-top: 38px;
+        border-left: 1px solid var(--rule);
+        padding-left: 28px;
+      }
+
+      .sb-head {
+        font-family: var(--font-sans);
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2.2px;
+        color: var(--ink);
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--ink);
+        margin-bottom: 2px;
+      }
+
+      .sb-list li {
+        border-bottom: 1px solid var(--rule);
+      }
+      .sb-item {
+        display: block;
+        padding: 13px 0;
+      }
+      .sb-tag {
+        font-family: var(--font-sans);
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--orange);
+        margin-bottom: 5px;
+        display: block;
+      }
+      .sb-title {
+        font-family: var(--font-sans);
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--ink);
+        line-height: 1.38;
+        margin-bottom: 5px;
+        display: block;
+        transition: color var(--fast);
+      }
+      .sb-item:hover .sb-title {
+        color: var(--orange);
+      }
+      .sb-date {
+        font-family: var(--font-sans);
+        font-size: 11px;
+        font-weight: 400;
+        color: var(--faint);
+        display: block;
+      }
+
+      /* ── RELATED ARTICLES ─────────────────────────────────────── */
+      .related-section {
+        max-width: var(--content);
+        margin: 64px auto 0;
+        padding-inline: 22px;
+      }
+
+      .related-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-top: 3px solid var(--ink);
+        padding-top: 20px;
+        margin-bottom: 28px;
+      }
+      .related-head-label {
+        font-family: var(--font-sans);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--ink);
+        white-space: nowrap;
+      }
+      .related-rule {
+        flex: 1;
+        height: 1px;
+        background: var(--rule);
+      }
+
+      .related-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .rel-card {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        padding-right: 28px;
+        padding-bottom: 28px;
+        border-right: 1px solid var(--rule);
+      }
+      .rel-card:nth-child(n + 2) {
+        padding-left: 28px;
+      }
+      .rel-card:last-child {
+        border-right: none;
+        padding-right: 0;
+      }
+
+      .rel-img-wrap {
+        width: 100%;
+        aspect-ratio: 16/9;
+        overflow: hidden;
+        background: var(--surface);
+        margin-bottom: 14px;
+        line-height: 0;
+      }
+      .rel-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform var(--slow) ease;
+      }
+      .rel-card:hover .rel-img-wrap img {
+        transform: scale(1.05);
+      }
+
+      .rel-cat {
+        font-family: var(--font-sans);
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.3px;
+        color: var(--orange);
+        margin-bottom: 7px;
+        display: block;
+      }
+      .rel-title {
+        font-family: var(--font-display);
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.3;
+        margin-bottom: 8px;
+        flex: 1;
+        transition: color var(--fast);
+      }
+      .rel-card:hover .rel-title {
+        color: var(--orange);
+      }
+      .rel-summary {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.55;
+        margin-bottom: 8px;
+      }
+      .rel-date {
+        font-family: var(--font-sans);
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--faint);
+        text-transform: uppercase;
+      }
+
+      /* ── ERROR / NOT FOUND ────────────────────────────────────── */
+      .error-state {
+        text-align: center;
+        padding: 120px 22px;
+        max-width: 520px;
+        margin-inline: auto;
+      }
+      .error-state h2 {
+        font-family: var(--font-display);
+        font-size: 30px;
+        color: var(--ink);
+        margin-bottom: 14px;
+      }
+      .error-state p {
+        font-family: var(--font-sans);
+        font-size: 16px;
+        color: var(--muted);
+        line-height: 1.65;
+        margin-bottom: 32px;
+      }
+      .btn-home {
+        display: inline-block;
+        padding: 12px 28px;
+        background: var(--orange);
+        color: var(--white);
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: opacity var(--fast);
+      }
+      .btn-home:hover {
+        opacity: 0.85;
+      }
+
+      /* ── RESPONSIVE ───────────────────────────────────────────── */
+      @media (max-width: 1060px) {
+        .art-wrap {
+          grid-template-columns: 1fr 240px;
+          gap: 0 44px;
+        }
+      }
+
+      @media (max-width: 860px) {
+        .art-wrap {
+          grid-template-columns: 1fr;
+        }
+        .art-sidebar {
+          display: none;
+        }
+        .art-hl {
+          font-size: 32px;
+        }
+        .art-deck {
+          font-size: 17px;
+        }
+        .related-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .rel-card:nth-child(2) {
+          border-right: none;
+          padding-right: 0;
+        }
+        .rel-card:nth-child(3) {
+          grid-column: 1;
+          padding-left: 0;
+          border-right: none;
+        }
+        .art-hero-img img {
+          max-height: 380px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .art-hl {
+          font-size: 26px;
+          letter-spacing: -0.3px;
+        }
+        .art-deck {
+          font-size: 16px;
+        }
+        .art-body p {
+          font-size: 17px;
+          line-height: 1.76;
+        }
+        .art-body blockquote p {
+          font-size: 20px;
+        }
+        .art-body li {
+          font-size: 17px;
+        }
+        .art-hero-img img {
+          max-height: 230px;
+        }
+        .art-header {
+          padding: 28px 22px 24px;
+        }
+        .by-read-time {
+          display: none;
+        }
+        .related-grid {
+          grid-template-columns: 1fr;
+        }
+        .rel-card {
+          border-right: none;
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          border-bottom: 1px solid var(--rule);
+          padding-bottom: 24px;
+        }
+        .rel-card:last-child {
+          border-bottom: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- READING PROGRESS BAR -->
+    <div
+      id="readProgress"
+      role="progressbar"
+      aria-label="Reading progress"
+      aria-valuenow="0"
+      aria-valuemin="0"
+      aria-valuemax="100"
+    ></div>
+
+    <!-- ACCENT STRIP -->
+    <div class="accent-strip"></div>
+
+    <!-- ============================================================
+     NAVIGATION
+============================================================ -->
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+      <div class="wrap">
+        <div class="nav-inner">
+          <a
+            href="index.html"
+            class="nav-logo"
+            aria-label="Station 16 — return to homepage"
+          >
+            <span class="o">Station</span>&nbsp;16
+          </a>
+
+          <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html?filter=SPORTS">Sports</a></li>
+            <li><a href="index.html?filter=POLITICS">Politics</a></li>
+            <li><a href="index.html?filter=TECHNOLOGY">Technology</a></li>
+            <li><a href="index.html?filter=OPINION">Opinion</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============================================================
+     META BAR
+============================================================ -->
+    <div class="meta-bar" id="metaBar">
+      <div class="wrap">
+        <div class="meta-bar-inner">
+          <a href="index.html" class="back-link" id="backLink">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M10 3L5 8L10 13"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span id="backLinkText">Back to Home</span>
+          </a>
+
+          <div class="meta-pipe" aria-hidden="true"></div>
+
+          <nav class="breadcrumb" aria-label="Page location">
+            <a href="index.html">Station 16</a>
+            <span class="bc-sep" aria-hidden="true">›</span>
+            <a class="bc-cat" href="index.html" id="bcCat">Loading…</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+     MAIN CONTENT  (populated by JS)
+============================================================ -->
+    <main id="mainContent" role="main">
+      <div class="spinner-wrap">
+        <div class="spinner"></div>
+        Loading article…
+      </div>
+    </main>
+
+    <!-- ============================================================
+     FOOTER
+============================================================ -->
+    <footer class="footer" role="contentinfo">
+      <div class="wrap">
+        <div class="footer-top">
+          <div>
+            <div class="footer-logo"><span class="o">Station</span> 16</div>
+            <div class="footer-tagline">
+              Independent journalism, delivered daily.
+            </div>
+          </div>
+          <nav class="footer-nav" aria-label="Footer navigation">
+            <a href="index.html?filter=SPORTS">Sports</a>
+            <a href="index.html?filter=POLITICS">Politics</a>
+            <a href="index.html?filter=TECHNOLOGY">Technology</a>
+            <a href="index.html?filter=OPINION">Opinion</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+          </nav>
+        </div>
+
+        <div class="footer-bottom">
+          <span class="footer-copy"
+            >© 2026 Station 16. All rights reserved.</span
+          >
+          <nav class="footer-legal">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Cookies</a>
+          </nav>
+        </div>
+      </div>
+    </footer>
+
+    <!-- marked.js — renders Markdown body from the CMS -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+    <script>
+      'use strict';
+
+      /* ----------------------------------------------------------------
+   CONSTANTS
+---------------------------------------------------------------- */
+      const CAT_PALETTE = {
+        SPORTS: '#0c2744',
+        POLITICS: '#3a0e0e',
+        TECHNOLOGY: '#0a2112',
+        OPINION: '#22103a',
+        _DEFAULT: '#1a1a1a',
+      };
+
+      const CAT_TAGS = {
+        SPORTS: ['Sports', 'Athletics', 'Competition'],
+        POLITICS: ['Politics', 'Government', 'Policy'],
+        TECHNOLOGY: ['Technology', 'Innovation', 'Science'],
+        OPINION: ['Opinion', 'Analysis', 'Editorial'],
+        _DEFAULT: ['News', 'Station 16'],
+      };
+
+      /* ----------------------------------------------------------------
+   UTILITIES
+---------------------------------------------------------------- */
+      function esc(s) {
+        if (s == null) return '';
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function makePlaceholder(cat) {
+        const bg = CAT_PALETTE[cat] || CAT_PALETTE._DEFAULT;
+        const svg =
+          `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450'>` +
+          `<rect width='800' height='450' fill='${bg}'/>` +
+          `<rect width='3' height='450' fill='#ff8000'/>` +
+          `<text x='400' y='232' font-family='Arial,sans-serif' font-size='13' ` +
+          `font-weight='700' fill='rgba(255,255,255,0.15)' text-anchor='middle' ` +
+          `letter-spacing='5'>${(cat || '').toUpperCase()}</text></svg>`;
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      }
+
+      function imgTag(src, alt, cat) {
+        const ph = makePlaceholder(cat);
+        return (
+          `<img src="${esc(src)}" alt="${esc(alt)}" ` +
+          `onerror="this.onerror=null;this.src='${ph}'">`
+        );
+      }
+
+      function toNice(cat) {
+        if (!cat) return '';
+        return cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase();
+      }
+
+      function readingMins(text) {
+        const words = (text || '').trim().split(/\s+/).filter(Boolean).length;
+        return Math.max(1, Math.round(words / 220));
+      }
+
+      /* ----------------------------------------------------------------
+   BODY RENDERER
+   Uses marked.js to parse Markdown saved by Decap CMS.
+   The drop-cap (.p-lead) class is applied via JS after render.
+---------------------------------------------------------------- */
+      function parseBody(raw) {
+        if (!raw) return '<p>No content available.</p>';
+        return marked.parse(raw, { gfm: true, breaks: false });
+      }
+
+      /* ----------------------------------------------------------------
+   READING PROGRESS BAR
+---------------------------------------------------------------- */
+      const progressEl = document.getElementById('readProgress');
+
+      window.addEventListener(
+        'scroll',
+        () => {
+          const scrolled = window.scrollY;
+          const total =
+            document.documentElement.scrollHeight - window.innerHeight;
+          const pct = total > 0 ? Math.min(100, (scrolled / total) * 100) : 0;
+          progressEl.style.width = pct + '%';
+          progressEl.setAttribute('aria-valuenow', Math.round(pct));
+        },
+        { passive: true },
+      );
+
+      /* ----------------------------------------------------------------
+   HIGHLIGHT NAV LINK FOR CURRENT CATEGORY
+---------------------------------------------------------------- */
+      function setNavActive(catUpper) {
+        document.querySelectorAll('#navLinks a').forEach((a) => {
+          const active = a.getAttribute('href')?.includes(`filter=${catUpper}`);
+          a.classList.toggle('active', !!active);
+        });
+      }
+
+      /* ----------------------------------------------------------------
+   RENDER ARTICLE
+---------------------------------------------------------------- */
+      function renderArticle(post, allPosts) {
+        const catUp = (post.category || '').toUpperCase();
+        const catNice = toNice(post.category);
+        const mins = readingMins(post.body);
+        const tags = CAT_TAGS[catUp] || CAT_TAGS._DEFAULT;
+
+        /* Page title */
+        document.title = `${post.title} — Station 16`;
+        setNavActive(catUp);
+
+        /* Breadcrumb + back link */
+        const bcCatEl = document.getElementById('bcCat');
+        bcCatEl.textContent = catNice;
+        bcCatEl.href = `index.html?filter=${catUp}`;
+
+        const backLink = document.getElementById('backLink');
+        backLink.href = `index.html?filter=${catUp}`;
+        document.getElementById('backLinkText').textContent =
+          `Back to ${catNice}`;
+
+        /* Related posts (same category, not self, max 3) */
+        const related = allPosts
+          .filter((p) => p.category.toUpperCase() === catUp && p.id !== post.id)
+          .slice(0, 3);
+
+        /* Sidebar posts (latest overall, not self, max 8) */
+        const sideItems = allPosts.filter((p) => p.id !== post.id).slice(0, 8);
+
+        /* ── HTML fragments ── */
+        const sidebarHtml = sideItems
+          .map(
+            (p) =>
+              `<li>
+      <a href="post.html?id=${esc(p.id)}" class="sb-item">
+        <div class="sb-tag">${esc(p.category)}</div>
+        <div class="sb-title">${esc(p.title)}</div>
+        <time class="sb-date">${esc(p.date)}</time>
+      </a>
+    </li>`,
+          )
+          .join('');
+
+        const tagsHtml = tags
+          .map((t) => `<span class="tag-pill">${esc(t)}</span>`)
+          .join('');
+
+        const relatedHtml = related.length
+          ? `<section class="related-section" aria-label="More in ${esc(catNice)}">
+        <div class="related-head">
+          <span class="related-head-label">More in ${esc(catNice)}</span>
+          <div class="related-rule" aria-hidden="true"></div>
+        </div>
+        <div class="related-grid">
+          ${related
+            .map(
+              (p) =>
+                `<a href="post.html?id=${esc(p.id)}" class="rel-card">
+              <div class="rel-img-wrap">${imgTag(p.image, p.title, p.category)}</div>
+              <span class="rel-cat">${esc(p.category)}</span>
+              <div class="rel-title">${esc(p.title)}</div>
+              <p class="rel-summary">${esc(p.summary)}</p>
+              <time class="rel-date">${esc(p.date)}</time>
+            </a>`,
+            )
+            .join('')}
+        </div>
+      </section>`
+          : '';
+
+        /* ── Inject full article ── */
+        document.getElementById('mainContent').innerHTML =
+          `<article class="article-page"
+              itemscope
+              itemtype="https://schema.org/NewsArticle">
+
+      <header class="art-header">
+        <a href="index.html?filter=${esc(catUp)}"
+           class="art-cat-link"
+           aria-label="All ${esc(catNice)} stories">
+          <span class="cat-dash" aria-hidden="true"></span>
+          ${esc(catUp)}
+        </a>
+
+        <h1 class="art-hl" itemprop="headline">${esc(post.title)}</h1>
+
+        <p class="art-deck">${esc(post.summary)}</p>
+
+        <div class="art-byline" role="group" aria-label="Byline and publication date">
+          <span class="by-author" itemprop="author">Station 16 Staff</span>
+          <span class="by-dot"    aria-hidden="true"></span>
+          <time class="by-date"
+                datetime="${esc(post.date)}"
+                itemprop="datePublished">${esc(post.date)}</time>
+          <span class="by-read-time" aria-label="${mins} minute read">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"
+                 stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.5"/>
+              <path d="M8 4.5V8l2.5 1.5" stroke-linecap="round"/>
+            </svg>
+            ${mins} min read
+          </span>
+        </div>
+      </header>
+
+      <div class="art-hero-outer">
+        <figure>
+          <div class="art-hero-img" itemprop="image">
+            ${imgTag(post.image, post.title, post.category)}
+          </div>
+          <figcaption class="art-hero-caption">
+            <span class="cap-bullet" aria-hidden="true"></span>
+            ${esc(catNice)} · ${esc(post.date)} · Station 16
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="art-wrap">
+
+        <div>
+          <div class="art-body" itemprop="articleBody">
+            ${parseBody(post.body)}
+          </div>
+
+          <div class="art-footer">
+            <div class="art-tags">
+              <span class="tags-label">Tags</span>
+              ${tagsHtml}
+            </div>
+            <div class="share-bar">
+              <span class="share-label">Share</span>
+              <button class="share-btn" id="btnX" aria-label="Share on X">
+                <svg width="13" height="13" viewBox="0 0 24 24"
+                     fill="currentColor" aria-hidden="true">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17
+                           l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254
+                           2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084
+                           4.126H5.117z"/>
+                </svg>
+                Post
+              </button>
+              <button class="share-btn" id="btnCopy" aria-label="Copy article link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                <span id="copyLabel">Copy link</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="art-sidebar" aria-label="Other recent articles">
+          <div class="sb-head">Latest</div>
+          <ul class="sb-list">${sidebarHtml}</ul>
+        </aside>
+
+      </div>
+
+      ${relatedHtml}
+
+    </article>`;
+
+        /* ── Drop cap: add p-lead to first top-level paragraph ── */
+        const firstBodyPara = document.querySelector('.art-body > p');
+        if (firstBodyPara) firstBodyPara.classList.add('p-lead');
+
+        /* ── Share buttons ── */
+        document.getElementById('btnX').addEventListener('click', () => {
+          const url = encodeURIComponent(location.href);
+          const text = encodeURIComponent(`${post.title} — Station 16`);
+          window.open(
+            `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+            '_blank',
+            'noopener,noreferrer',
+          );
+        });
+
+        document.getElementById('btnCopy').addEventListener('click', () => {
+          navigator.clipboard
+            .writeText(location.href)
+            .then(() => {
+              const btn = document.getElementById('btnCopy');
+              const label = document.getElementById('copyLabel');
+              btn.classList.add('btn--copied');
+              label.textContent = 'Copied!';
+              setTimeout(() => {
+                btn.classList.remove('btn--copied');
+                label.textContent = 'Copy link';
+              }, 2400);
+            })
+            .catch(() => {});
+        });
+      }
+
+      /* ----------------------------------------------------------------
+   RENDER ERROR
+---------------------------------------------------------------- */
+      function renderError(msg) {
+        document.title = 'Not Found — Station 16';
+        document.getElementById('mainContent').innerHTML =
+          `<div class="error-state">
+      <h2>Article Not Found</h2>
+      <p>${esc(msg)}</p>
+      <a href="index.html" class="btn-home">← Back to Home</a>
+    </div>`;
+      }
+
+      /* ----------------------------------------------------------------
+   INIT
+---------------------------------------------------------------- */
+      async function init() {
+        const postId = new URLSearchParams(location.search).get('id');
+
+        if (!postId) {
+          renderError('No article ID was supplied in the URL.');
+          return;
+        }
+
+        let allPosts;
+        try {
+          const res = await fetch('posts.json');
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          allPosts = await res.json();
+        } catch (err) {
+          console.warn('Could not load posts.json — using demo data.', err);
+          allPosts = DEMO_POSTS;
+        }
+
+        const post = allPosts.find((p) => p.id === postId);
+        if (!post) {
+          renderError(`No article with the ID "${esc(postId)}" was found.`);
+          return;
+        }
+
+        renderArticle(post, allPosts);
+      }
+
+      /* ----------------------------------------------------------------
+   DEMO POSTS  (fallback when posts.json is absent)
+---------------------------------------------------------------- */
+      const DEMO_POSTS = [
+        {
+          id: 'championship-final-preview',
+          title:
+            'City United Face Riverside FC in a Historic Championship Final',
+          category: 'SPORTS',
+          date: 'May 18, 2026',
+          summary:
+            'Two fierce rivals prepare for what analysts are calling the most anticipated final in a generation.',
+          image: 'images/championship-final-preview.jpg',
+          body: "The city has never felt more electric.\n\nAfter years of bitter rivalry in rain-soaked lower-division grounds, City United and Riverside FC will finally meet on the grandest stage available to them — the National Cup Final at Westfield Arena.\n\nBoth managers were carefully tight-lipped at Friday's press conference, but the weight of history was unmistakable in the room. \"We've waited a long time for this,\" said United captain Marcus Delvecchio. \"Every player in that dressing room knows exactly what tomorrow means.\"\n\n> The fixture has been building for three years. When these clubs met in pre-season last August, the match ended in a brawl that resulted in four red cards. This is not simply a football match.\n\n## What's at Stake\n\nFor City United, a trophy would end a sixteen-year wait and deliver automatic Champions League qualification for the first time in the club's history. For Riverside FC, it would represent the culmination of a five-year rebuild under head coach Petra Holst.\n\n### The Key Matchup\n\nDelvecchio versus Riverside's Yusuf Amara is the headline individual contest. Amara has created 47 goal-scoring chances — more than any other player in the tournament — while Delvecchio has contributed six goals and four assists from central midfield.\n\n---\n\nKickoff is Saturday at 17:00 local time. The match will be broadcast to 68 countries.",
+        },
+        {
+          id: 'senate-infrastructure-bill',
+          title:
+            'Senate Passes Landmark Infrastructure Reform Bill After Three-Day Debate',
+          category: 'POLITICS',
+          date: 'May 17, 2026',
+          summary:
+            'The bipartisan bill allocates $800 billion toward roads, bridges, and clean-energy grids over the next decade.',
+          image: 'images/senate-infrastructure-bill.jpg',
+          body: 'After three tense and at times acrimonious days on the floor, the Infrastructure Reform Act passed by a bipartisan majority of 67 votes on Thursday afternoon.\n\nThe legislation directs $800 billion toward roads, bridges, passenger rail, and clean-energy grid modernisation over the next ten years — the largest federal infrastructure investment since the Interstate Highway Act of 1956.\n\n> This is what governing looks like. You find the things you agree on, and you build from there. The country cannot wait any longer. — Senator Patricia Owens (D-MN)\n\n## What the Bill Contains\n\nThe largest single allocation — $240 billion — goes to the National Highway System. A further $180 billion is earmarked for passenger and freight rail, with a specific focus on the Northeast Corridor.\n\nPerhaps most consequentially, $160 billion is directed at modernising the national electrical grid — a system the Department of Energy has described as "dangerously under-prepared" for the load demands of an electrified vehicle fleet.\n\n### How the Vote Came Together\n\nThe bill nearly collapsed on Wednesday evening when a bloc of fiscal conservatives threatened to withhold their votes over ten-year cost projections. A last-minute compromise — extending some payment schedules from 10 to 15 years — brought them back to the table.\n\nPresident Sullivan is expected to sign the bill at a Rose Garden ceremony on Monday morning.',
+        },
+        {
+          id: 'ai-safety-framework',
+          title: 'Global AI Summit Produces First Binding Safety Framework',
+          category: 'TECHNOLOGY',
+          date: 'May 17, 2026',
+          summary:
+            'Thirty-two nations signed an agreement setting hard limits on autonomous weapons and mass-surveillance AI systems.',
+          image: 'images/ai-safety-framework.jpg',
+          body: "In a sunlit chamber at the Palais des Nations in Geneva, representatives from thirty-two countries signed the Accord on Artificial Intelligence Safety on Wednesday — the first international treaty to impose legally binding restrictions on military AI.\n\nThe accord prohibits autonomous weapons systems capable of selecting and engaging targets without direct human authorisation, and bans AI-powered mass-surveillance systems that operate without independent judicial oversight.\n\n> We are not banning innovation. We are banning recklessness. The two are not the same thing. — Dr. Amina Yasir, UN Special Rapporteur on Emerging Technology\n\n## What the Accord Does and Doesn't Do\n\nThe treaty is notable both for what it includes and for what it stops short of addressing. It does not regulate large language models, generative AI, or autonomous vehicles — areas where consensus proved impossible.\n\n### Who Signed — and Who Didn't\n\nNotably absent were three of the world's most consequential AI powers: China, Russia, and the United States. Washington has indicated it may join a revised version within eighteen months, pending Congressional review.",
+        },
+        {
+          id: 'marathon-world-record',
+          title: "Kenyan Runner Shatters Men's Marathon World Record in Berlin",
+          category: 'SPORTS',
+          date: 'May 16, 2026',
+          summary:
+            'Elias Kosgei crossed the finish line at 1:57:44, becoming the first man to break two hours in competition.',
+          image: 'images/marathon-world-record.jpg',
+          body: "History was written on the broad, flat streets of Berlin on Sunday morning, in the presence of ninety thousand spectators and a watching world.\n\nElias Kosgei, twenty-four years old and virtually unknown outside the running community eighteen months ago, crossed the finish line at the Brandenburg Gate in one hour, fifty-seven minutes, and forty-four seconds.\n\n> I did not think about the record. I thought about my father, who ran this same road forty years ago and never got his chance. This was for him. — Elias Kosgei\n\n## A Record Built Over Years\n\nKosgei's achievement did not arrive from nowhere. The Kenyan Athletics Federation's high-altitude training programme in Iten has been quietly refining his physiology for three years.\n\n### The Science Behind the Performance\n\nSports physiologists note that Kosgei's VO2 max recorded at 97.2 millilitres per kilogram per minute in February — the highest value ever documented in a competitive distance runner. He was also competing in a prototype carbon-plated racing shoe promising a 4.8% energy-return improvement.",
+        },
+        {
+          id: 'opinion-local-journalism',
+          title:
+            'Why Local Journalism Is the Last Line of Defence for Democracy',
+          category: 'OPINION',
+          date: 'May 16, 2026',
+          summary:
+            'As national outlets chase engagement metrics, the reporters covering city hall remain our most essential democratic watchdogs.',
+          image: 'images/opinion-local-journalism.jpg',
+          body: "Every week, somewhere in this country, a local newspaper closes its doors for the last time.\n\nThe economics are brutal and well-documented: print revenues in freefall, digital advertising captured by two platforms, and no viable business model yet discovered to replace what has been lost.\n\nBut the loss is not merely financial or sentimental. It is constitutional.\n\n> When the reporter who covered the planning commission for thirty years is gone, who notices that the mayor's brother won the construction contract? The answer, too often, is nobody.\n\n## The Accountability Vacuum\n\nA 2024 University of Chicago study tracked 400 counties that lost their only local newspaper between 2010 and 2023. Voter turnout in local elections fell by an average of nine percentage points. Corruption prosecutions declined by 34 percent — not because corruption decreased, but because nobody was watching.\n\n### What We Can Do\n\nThe solutions involve a combination of public funding with robust editorial independence protections, philanthropic support, reader revenue, and creative legal structures such as the news co-operative.\n\nThe question is not whether we can afford to support local journalism. It is whether we can afford to continue without it.",
+        },
+        {
+          id: 'quantum-computing-breakthrough',
+          title: 'MIT Researchers Achieve Stable 1,000-Qubit Quantum Processor',
+          category: 'TECHNOLOGY',
+          date: 'May 15, 2026',
+          summary:
+            'The milestone brings practical quantum computing closer to reality with major implications for cryptography and drug discovery.',
+          image: 'images/quantum-computing-breakthrough.jpg',
+          body: "A team at the Massachusetts Institute of Technology has successfully operated a one-thousand-qubit quantum processor with error rates low enough for practical computation — a threshold the quantum computing community has been working toward for three decades.\n\nThe achievement, published Thursday in the journal Nature, was met with a mixture of excitement and careful restraint by researchers who have learned to treat milestone announcements with scepticism.\n\n> We have crossed a line. This is no longer theoretical physics — this is engineering. The question now is how quickly we can scale it. — Dr. Priya Nair, MIT Quantum Systems Laboratory\n\n## Why This Matters\n\nThe error-rate problem has been the central obstacle in quantum computing since the field's inception. The MIT team achieved stability through a novel error-correction architecture operating at 8 millikelvin — roughly fifty times colder than deep space.\n\n### Implications for Cryptography\n\nMost widely-used public-key encryption algorithms would be vulnerable to a sufficiently stable quantum computer. The MIT processor is not yet large enough to break current standards, but security agencies in multiple countries are already accelerating the transition to post-quantum cryptographic algorithms.",
+        },
+        {
+          id: 'ranked-choice-voting',
+          title:
+            'Ranked-Choice Voting Legislation Advances in Five States Simultaneously',
+          category: 'POLITICS',
+          date: 'May 15, 2026',
+          summary:
+            'Advocates call the coordinated push a tipping point for electoral reform momentum across the country.',
+          image: 'images/ranked-choice-voting.jpg',
+          body: 'In what reformers are describing as an unprecedented coordinated push, ranked-choice voting bills advanced out of committee in five states on the same day: Oregon, Michigan, Colorado, Nevada, and Virginia.\n\nThe five states represent a combined 47 electoral votes and, perhaps more importantly, a cross-section of American political geography that advocates hope will signal nationwide legitimacy.\n\n> We want every lawmaker in every state capital to understand that this is not a fringe idea. This is a mainstream solution to a mainstream problem. — Leila Osei, National Electoral Reform Coalition\n\n## The Reform and Its Appeal\n\nRanked-choice voting has accumulated unusual cross-partisan support. Democrats argue it reduces the spoiler effect. A growing cohort of Republicans argue it would reduce the outsized influence of base primary voters.\n\n### Opposition and Obstacles\n\nThe bills face significant resistance from incumbent officeholders of both parties, and from the political consulting industry whose business models depend on the dynamics of binary campaigns.\n\nIn Michigan, the state Republican Party has already announced its intention to challenge any enacted legislation in court — though legal scholars contacted for this article were broadly sceptical that such a challenge would succeed.',
+        },
+        {
+          id: 'opinion-climate-gap',
+          title:
+            "The Numbers Are In: We're Still Not Moving Fast Enough on Climate",
+          category: 'OPINION',
+          date: 'May 14, 2026',
+          summary:
+            'A review of the latest IPCC data reveals a widening gap between national pledges and actual emissions reductions.',
+          image: 'images/opinion-climate-gap.jpg',
+          body: "The IPCC's latest synthesis report runs to nearly three thousand pages. Most people will not read it. That is understandable — it is written to be cited in policy briefs, not read cover-to-cover.\n\nBut here is what those three thousand pages say, stripped of scientific qualification and diplomatic hedging: we are not on track. Not marginally off target. The gap between what countries have pledged and what they have delivered has grown wider every year since Paris.\n\n> The problem is not a lack of technology, a lack of capital, or a lack of scientific understanding. The problem is a lack of political will at a scale adequate to the crisis.\n\n## The Number Nobody Wants to Discuss\n\nBuried in the synthesis report's Chapter 4 is a figure that should appear on the front page of every newspaper: 2.7 degrees Celsius. That is the warming trajectory we are currently on, based on existing policies and their actual implementation rates.\n\n### What the Science Actually Requires\n\nEconomists and climate scientists have agreed for years on the basic architecture of an adequate response: a meaningful global carbon price, accelerated renewable deployment, a managed phase-out of fossil fuel subsidies, and investment in adaptation for the countries already experiencing the worst impacts.\n\nNone of these is technically impossible. All of them are politically difficult. That is the only honest description of where we are.",
+        },
+        {
+          id: 'wimbledon-upset',
+          title: 'Unseeded Teenager Stuns World No. 1 in Wimbledon Third Round',
+          category: 'SPORTS',
+          date: 'May 14, 2026',
+          summary:
+            'Seventeen-year-old Mia Tanaka delivered a stunning 6–2, 4–6, 7–5 victory that left Centre Court in disbelief.',
+          image: 'images/wimbledon-upset.jpg',
+          body: 'Centre Court has witnessed upsets before. In its long, grass-scented history it has watched giants fall and legends made from nothing. But seldom has it seen an upset as complete as what happened on Thursday afternoon.\n\nMia Tanaka, seventeen years old and ranked 214th in the world, dismantled the defending champion in two hours and nine minutes of near-flawless grass-court tennis. The final score — 6–2, 4–6, 7–5 — understates the dominance of the opening set and the poise required to serve out the deciding one.\n\n> I have watched Mia train since she was twelve years old. I have never once thought she did not belong on this court. Today proved what I already knew. — Kenji Tanaka, her father and first coach\n\n## How She Did It\n\nTanaka\'s game is built on an unusual combination of pace and disguise. Her flat, single-handed backhand generated an average of 87 miles per hour in Thursday\'s match — well above tour average for the surface.\n\n### What Comes Next\n\nTanaka faces a quarterfinal place in her next match, against either the third or seventh seed. Her coaching staff had already begun preparing.\n\n"We will watch the video tonight," she said after the match. "And then we will sleep. And then we will be ready."\n\nThe crowd, still audibly buzzing as she spoke, appeared to believe her without reservation.',
+        },
+      ];
+
+      /* ----------------------------------------------------------------
+   BOOT
+---------------------------------------------------------------- */
+      init();
+    </script>
+  </body>
+</html>

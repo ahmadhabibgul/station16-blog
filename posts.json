@@ -1,0 +1,83 @@
+[
+  {
+    "id": "championship-final-preview",
+    "title": "City United Face Riverside FC in a Historic Championship Final",
+    "category": "SPORTS",
+    "date": "May 18, 2026",
+    "summary": "Two fierce rivals prepare for what analysts are calling the most anticipated final in a generation.",
+    "image": "images/championship-final-preview.jpg",
+    "body": "The city has never felt more electric.\n\nAfter years of bitter rivalry in rain-soaked lower-division grounds, City United and Riverside FC will finally meet on the biggest stage available to them — the National Cup Final.\n\nBoth managers remained tight-lipped at Friday's press conference, but the weight of the occasion was unmistakable. 'We've waited a long time for this,' United captain Marcus Delvecchio said. 'We're ready.'"
+  },
+  {
+    "id": "ai-safety-framework",
+    "title": "Global AI Summit Produces First Binding Safety Framework",
+    "category": "TECHNOLOGY",
+    "date": "May 17, 2026",
+    "summary": "Thirty-two nations signed an agreement setting hard limits on autonomous weapons and mass-surveillance AI systems.",
+    "image": "images/ai-safety-framework.jpg",
+    "body": "Representatives from thirty-two countries gathered in Geneva on Wednesday to sign the landmark Accord on Artificial Intelligence Safety, the first international treaty to impose binding restrictions on military AI.\n\nThe accord prohibits autonomous weapons systems capable of selecting and engaging targets without human authorisation, and bans AI-powered mass surveillance systems that lack judicial oversight.\n\nCritics argue the agreement lacks a meaningful enforcement mechanism, but supporters call it a historic first step."
+  },
+  {
+    "id": "senate-infrastructure-bill",
+    "title": "Senate Passes Landmark Infrastructure Reform Bill After Three-Day Debate",
+    "category": "POLITICS",
+    "date": "May 17, 2026",
+    "summary": "The bipartisan bill allocates $800 billion toward roads, bridges, and clean-energy grids over the next decade.",
+    "image": "images/senate-infrastructure-bill.jpg",
+    "body": "After three tense days on the floor, the Senate passed the Infrastructure Reform Act on Thursday afternoon by a bipartisan majority of 67 votes.\n\nThe legislation directs $800 billion toward roads, bridges, passenger rail, and clean-energy grid upgrades over ten years — the largest federal infrastructure investment since the Interstate Highway Act of 1956.\n\nPresident Sullivan is expected to sign the bill at a Rose Garden ceremony on Monday."
+  },
+  {
+    "id": "marathon-world-record",
+    "title": "Kenyan Runner Shatters Men's Marathon World Record in Berlin",
+    "category": "SPORTS",
+    "date": "May 16, 2026",
+    "summary": "Elias Kosgei crossed the finish line at 1:57:44, becoming the first man to break two hours in competition.",
+    "image": "images/marathon-world-record.jpg",
+    "body": "History was written on the streets of Berlin on Sunday morning.\n\nElias Kosgei, 24, crossed the finish line at the Brandenburg Gate in one hour, fifty-seven minutes, and forty-four seconds — shattering the world record and becoming the first man to run a sub-two-hour marathon in a sanctioned competitive race.\n\nThe crowd of 90,000 erupted as his time appeared on the giant clock overhead. Kosgei collapsed to his knees, then rose to take a victory lap wrapped in the Kenyan flag."
+  },
+  {
+    "id": "opinion-local-journalism",
+    "title": "Why Local Journalism Is the Last Line of Defence for Democracy",
+    "category": "OPINION",
+    "date": "May 16, 2026",
+    "summary": "As national outlets chase engagement metrics, the reporters covering city hall remain our most essential democratic watchdogs.",
+    "image": "images/opinion-local-journalism.jpg",
+    "body": "Every week, another local newspaper closes its doors.\n\nThe economics are brutal and well-documented: print revenues in freefall, digital ad money captured by two platforms, and an audience fragmented across dozens of apps and feeds.\n\nBut the loss is not merely sentimental — it is constitutional. When the reporter who covered the planning commission for thirty years is gone, who notices that the mayor's brother won the construction contract?"
+  },
+  {
+    "id": "quantum-computing-breakthrough",
+    "title": "MIT Researchers Achieve Stable 1,000-Qubit Quantum Processor",
+    "category": "TECHNOLOGY",
+    "date": "May 15, 2026",
+    "summary": "The milestone brings practical quantum computing closer to reality with major implications for cryptography and drug discovery.",
+    "image": "images/quantum-computing-breakthrough.jpg",
+    "body": "A team at the Massachusetts Institute of Technology announced Thursday that it had successfully operated a one-thousand-qubit quantum processor with error rates low enough for practical computation.\n\nThe achievement, published in the journal Nature, is widely considered a watershed moment for the field.\n\n'We've crossed a threshold,' said lead researcher Dr. Priya Nair. 'This is no longer theoretical physics — this is engineering.' The processor's stability opens pathways to breaking current encryption standards and simulating complex protein folding."
+  },
+  {
+    "id": "ranked-choice-voting",
+    "title": "Ranked-Choice Voting Legislation Advances in Five States Simultaneously",
+    "category": "POLITICS",
+    "date": "May 15, 2026",
+    "summary": "Advocates call the coordinated push a tipping point for electoral reform momentum across the country.",
+    "image": "images/ranked-choice-voting.jpg",
+    "body": "In a coordinated legislative push described as unprecedented, ranked-choice voting bills advanced out of committee in five states on the same day: Oregon, Michigan, Colorado, Nevada, and Virginia.\n\nTogether those states represent 47 electoral votes and, reformers argue, a critical mass of political will.\n\n'We want every lawmaker in every state to see this is not a fringe idea,' said Leila Osei of the National Electoral Reform Coalition. 'This is a mainstream solution to a mainstream problem.'"
+  },
+  {
+    "id": "opinion-climate-gap",
+    "title": "The Numbers Are In: We're Still Not Moving Fast Enough on Climate",
+    "category": "OPINION",
+    "date": "May 14, 2026",
+    "summary": "A review of the latest IPCC data reveals a widening gap between national pledges and actual emissions reductions.",
+    "image": "images/opinion-climate-gap.jpg",
+    "body": "The IPCC's latest synthesis report runs to nearly three thousand pages. Most people will not read it — that is understandable.\n\nBut here is what those pages say, stripped of scientific caveats: we are not on track. The gap between what countries have pledged and what they have actually delivered has widened every single year since the Paris Agreement was signed.\n\nThis is not a failure of knowledge. Everyone knows what must be done. It is a failure of political will, and that is a solvable problem — if we choose to solve it."
+  },
+  {
+    "id": "wimbledon-upset",
+    "title": "Unseeded Teenager Stuns World No. 1 in Wimbledon Third Round",
+    "category": "SPORTS",
+    "date": "May 14, 2026",
+    "summary": "Seventeen-year-old Mia Tanaka delivered a stunning 6–2, 4–6, 7–5 victory that left Centre Court in disbelief.",
+    "image": "images/wimbledon-upset.jpg",
+    "body": "Centre Court has witnessed upsets before, but seldom one as complete as this.\n\nMia Tanaka, seventeen years old and ranked 214th in the world, dismantled the defending champion in two hours and nine minutes of near-flawless grass-court tennis on Thursday afternoon.\n\nWhen the final ball clipped the baseline and was called out, the teenager covered her face with both hands. Then she looked up at a crowd that was already on its feet, and burst into tears."
+  }
+]
