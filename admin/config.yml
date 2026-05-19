@@ -1,8 +1,5 @@
 ---
-
 ### `admin/config.yml`
-
-```yaml
 # ─────────────────────────────────────────────────────────────────────────────
 # Decap CMS — Station 16
 # Docs: https://decapcms.org/docs/configuration-options/
@@ -12,8 +9,8 @@
 # git-gateway authenticates via Netlify Identity, then commits to GitHub
 # on your behalf through Netlify's Git Gateway service.
 backend:
- name:   git-gateway
- branch: main          # ← change to "master" if that is your default branch
+  name: git-gateway
+  branch: main # ← change to "master" if that is your default branch
 
 # ── Locale ───────────────────────────────────────────────────────────────────
 locale: en
@@ -21,76 +18,74 @@ locale: en
 # ── Media uploads ────────────────────────────────────────────────────────────
 # media_folder : where uploaded files land in the repository
 # public_folder: the path written into content (must match how your HTML references images)
-media_folder:  "images"
-public_folder: "images"
+media_folder: 'images'
+public_folder: 'images'
 
 # ── Collections ──────────────────────────────────────────────────────────────
 collections:
+  - name: posts
+    label: Blog Posts
+    label_singular: Blog Post
 
- - name:           posts
-   label:          Blog Posts
-   label_singular: Blog Post
+    # Each post is a Markdown file with YAML frontmatter stored in _posts/
+    folder: _posts
+    create: true
+    delete: true
+    format: frontmatter # YAML frontmatter block + Markdown body
 
-   # Each post is a Markdown file with YAML frontmatter stored in _posts/
-   folder:  _posts
-   create:  true
-   delete:  true
-   format:  frontmatter    # YAML frontmatter block + Markdown body
+    # Filename pattern → e.g. 2026-05-18-city-united-final.md
+    # {{slug}} is the URL-safe version of the title field.
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
 
-   # Filename pattern → e.g. 2026-05-18-city-united-final.md
-   # {{slug}} is the URL-safe version of the title field.
-   slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    # What appears in the CMS list view
+    summary: '{{title}} — {{category}} ({{date}})'
 
-   # What appears in the CMS list view
-   summary: "{{title}} — {{category}} ({{date}})"
+    # Columns that can be sorted in list view
+    sortable_fields:
+      - date
+      - title
+      - category
 
-   # Columns that can be sorted in list view
-   sortable_fields:
-     - date
-     - title
-     - category
+    # ── Form fields ──────────────────────────────────────────────────────────
+    fields:
+      - label: Title
+        name: title
+        widget: string
+        hint: 'Full headline — shown large on the article page'
 
-   # ── Form fields ──────────────────────────────────────────────────────────
-   fields:
+      - label: Category
+        name: category
+        widget: select
+        hint: 'Section this post belongs to'
+        options:
+          - { label: 'Sports', value: 'SPORTS' }
+          - { label: 'Politics', value: 'POLITICS' }
+          - { label: 'Technology', value: 'TECHNOLOGY' }
+          - { label: 'Opinion', value: 'OPINION' }
 
-     - label:  Title
-       name:   title
-       widget: string
-       hint:   "Full headline — shown large on the article page"
+      - label: 'Publication Date'
+        name: date
+        widget: datetime
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        format: 'YYYY-MM-DD'
+        hint: 'Date the article is published'
 
-     - label:   Category
-       name:    category
-       widget:  select
-       hint:    "Section this post belongs to"
-       options:
-         - { label: "Sports",     value: "SPORTS"     }
-         - { label: "Politics",   value: "POLITICS"   }
-         - { label: "Technology", value: "TECHNOLOGY" }
-         - { label: "Opinion",    value: "OPINION"    }
+      - label: Summary
+        name: summary
+        widget: string
+        hint: 'One-sentence teaser shown on the homepage card (keep it under 160 characters)'
 
-     - label:       "Publication Date"
-       name:        date
-       widget:      datetime
-       date_format: "YYYY-MM-DD"
-       time_format: false
-       format:      "YYYY-MM-DD"
-       hint:        "Date the article is published"
+      - label: 'Hero Image'
+        name: image
+        widget: image
+        required: false
+        choose_url: false
+        hint: '16:9 ratio recommended — 1600 × 900 px minimum'
 
-     - label:  Summary
-       name:   summary
-       widget: string
-       hint:   "One-sentence teaser shown on the homepage card (keep it under 160 characters)"
-
-     - label:      "Hero Image"
-       name:       image
-       widget:     image
-       required:   false
-       choose_url: false
-       hint:       "16:9 ratio recommended — 1600 × 900 px minimum"
-
-     - label:  Body
-       name:   body
-       widget: markdown
-       hint: >
-         Full article text. Use Heading 2 (##) for section headings,
-         Heading 3 (###) for sub-labels, and > for pull quotes.
+      - label: Body
+        name: body
+        widget: markdown
+        hint: >
+          Full article text. Use Heading 2 (##) for section headings,
+          Heading 3 (###) for sub-labels, and > for pull quotes.
