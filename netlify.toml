@@ -1,20 +1,11 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# netlify.toml — Station 16
-# ─────────────────────────────────────────────────────────────────────────────
-
 [build]
- # Runs on every deploy triggered by a git push (including CMS publishes).
- # npm install runs automatically when package.json is present.
- command = "npm run build"
- publish = "."          # Serve files from the repository root
+  command = "npm run build"
+  publish = "."
 
 [build.environment]
- NODE_VERSION = "18"
+  NODE_VERSION = "18"
 
-# ── Netlify Identity redirect ─────────────────────────────────────────────────
-# Ensures the Identity confirmation / recovery links resolve correctly.
 [[redirects]]
- from   = "/*"
- to     = "/index.html"
- status = 200
- conditions = { Role = ["admin"] }
+  from = "/*"
+  to = "/index.html"
+  status = 200
